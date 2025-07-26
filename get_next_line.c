@@ -66,19 +66,40 @@ char	*ft_get_remainder(char *str)
 	ft_strlcpy(remainder, str, size);
 	return (remainder);
 }
+
 char	*ft_getline(char *buffer, size_t end)
 {
-	char		*str;
 	static char	*remainder;
-	size_t		size;
+	char		*str;
+	size_t		buf_len;
+	size_t		rem_len;
 
 	str = NULL;
-	if (end > 0)
+	buf_len = ft_strlen(buffer);
+	rem_len = 0;
+	if (remainder != (void *)0)
 	{
-		size = ft_strlen(buffer) - end;
-		str = (char *) malloc(end + 1);
+		rem_len = ft_strlen(remainder);
+		str = (char *) malloc(rem_len + end + 1);
+		if (!str)
+			return ((void *)0);
+		ft_strlcpy(str, remainder, rem_len + 1);
 		ft_strlcpy(str, buffer, end);
-		remainder = ft_get_remainder(buffer + size);
+		if (buf_len - end > 0)
+		{
+			free(remainder);
+			remainder = (char *) malloc(buf_len - end + 1);
+			if (!remainder)
+				return ((void *)0);
+			ft_strlcpy(remainder, buffer + end + 1, buf_len - end + 1);
+		}
+	}
+	else
+	{
+		remainder = (char *) malloc(buf_len + 1);
+			if (!remainder)
+				return ((void *)0);
+		ft_strlcpy(remainder, buffer, buf_len);
 	}
 	return (str);
 }
@@ -100,8 +121,10 @@ char	*ft_get_next_line(int fd)
 		{
 			// Show buffer until newline and keep the rest
 			end = ft_get_newline_pos(buffer);
-			return ft_getline(buffer, end);
+			return (ft_getline(buffer, end));
 		}
+		else
+			ft_getline(buffer, size);
 		// read next line
 		size = read(fd, buffer, BUFFER_SIZE);
 	}
