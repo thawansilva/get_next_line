@@ -1,0 +1,6 @@
+Makefile
+*.out
+*.o
+*.swp
+*.pdf
+tests/
