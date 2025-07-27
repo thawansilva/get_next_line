@@ -30,7 +30,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	size_t	i;
 
 	if (!nmemb || !size)
-		return ((void *)0); // strdup
+		return ((void *)0);
 	if (nmemb > ((size_t)-1 / size))
 		return ((void *)0);
 	ptr = (void *) malloc(nmemb * size + 1);
