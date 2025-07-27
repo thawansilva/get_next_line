@@ -20,17 +20,9 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-typedef struct s_list
-{
-	void	*content;
-	void	*next;
-}			t_list;
-
-char	*get_next_line(int fd);
 size_t	ft_strlen(const char *str);
-char	*ft_getline(char *buffer, size_t end);
-int		ft_isnewline(char *str);
-size_t	ft_get_newline_pos(char *str);
 char	*ft_get_next_line(int fd);
 size_t	ft_strlcpy(char *dest, const char *src, size_t size);
+void	*ft_calloc(size_t nmemb, size_t size);
+char	*ft_strjoin(const char *s1, const char *s2);
 #endif 
