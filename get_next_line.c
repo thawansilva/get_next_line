@@ -25,28 +25,15 @@ int	ft_get_newline_pos(char *str)
 	return (0);
 }
 
-//char	*ft_get_remainder(char *remainder)
-//{
-//	size_t	size;
-//	char	*remainder;
-//
-//	size = ft_strlen(str);
-//	remainder = (char *) malloc(size + 1);
-//	if (!remainder)
-//		return (0);
-//	ft_strlcpy(remainder, str, size);
-//	return (remainder);
-//}
-
 char	*ft_get_line(char *buffer, char *remainder, size_t end)
 {
 	char	*str;
 	size_t	buf_len;
 	size_t	rem_len;
-
+	
 	buf_len = ft_strlen(buffer);
 	rem_len = ft_strlen(remainder);
-	if (rem_len > 0) // filled remainder
+	if (rem_len > 0) 
 	{
 		str = ft_calloc(rem_len + end, sizeof(char));
 		if (!str)
@@ -54,7 +41,7 @@ char	*ft_get_line(char *buffer, char *remainder, size_t end)
 		ft_strlcpy(str, remainder, rem_len);
 		ft_strlcpy(str, buffer, end);
 	}
-	else // empty remainder
+	else
 	{
 		str = ft_calloc(buf_len, sizeof(char));
 		if (!str)
@@ -62,6 +49,28 @@ char	*ft_get_line(char *buffer, char *remainder, size_t end)
 		ft_strlcpy(str, buffer, end);
 	}
 	return (str);
+}
+
+char	*ft_get_remainder(char *remainder, char *buffer, size_t end)
+{
+	size_t	rem_len;
+	size_t	buf_len;
+	char	*str;
+
+	rem_len = ft_strlen(remainder);
+	buf_len = ft_strlen(buffer);
+	if (rem_len > 0 && buf_len == end)
+	{
+		str = ft_strjoin(remainder, buffer);
+		free(remainder);
+		remainder = ft_strjoin(str, "");
+	}
+	else
+	{
+		remainder = ft_calloc(buf_len, sizeof(char));
+		ft_strlcpy(remainder, buffer, buf_len);
+	}
+	return (remainder);
 }
 
 char	*ft_parse_line(char *buffer, size_t end)
@@ -74,26 +83,14 @@ char	*ft_parse_line(char *buffer, size_t end)
 	str = (void *)0;
 	buf_len = ft_strlen(buffer);
 	rem_len = ft_strlen(remainder);
-	if (buf_len > end) // buffer with \n
+	if (buf_len > end) 
 	{
 		str = ft_get_line(buffer, remainder, end);
 		remainder = ft_calloc(buf_len - end, sizeof(char));
 		ft_strlcpy(remainder, buffer + end + 1, buf_len - end);
 	}
-	else // buffer without \n
-	{
-		if (rem_len > 0 && buf_len == end) // filled remainder
-		{
-			str = ft_strjoin(remainder, buffer);
-			free(remainder);
-			remainder = ft_strjoin(str, "");
-		}
-		else
-		{
-			remainder = ft_calloc(buf_len, sizeof(char));
-			ft_strlcpy(remainder, buffer, buf_len);
-		}
-	}
+	else
+		remainder = ft_get_remainder(remainder, buffer, end);
 	return (str);
 }
 
