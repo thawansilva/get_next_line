@@ -12,16 +12,19 @@
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
+# include <stdlib.h>
+# include <unistd.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1024
 # endif
 
-# include <stdlib.h>
-# include <unistd.h>
+#ifndef OPEN_MAX
+# define OPEN_MAX 1024
+#endif
 
 size_t	ft_strlen(const char *str);
-char	*ft_get_next_line(int fd);
+char	*get_next_line(int fd);
 size_t	ft_strlcpy(char *dest, const char *src, size_t size);
 void	*ft_calloc(size_t nmemb, size_t size);
 char	*ft_strjoin(const char *s1, const char *s2);
