@@ -28,4 +28,5 @@ char	*get_next_line(int fd);
 size_t	ft_strlcpy(char *dest, const char *src, size_t size);
 void	*ft_calloc(size_t nmemb, size_t size);
 char	*ft_strjoin(const char *s1, const char *s2);
+size_t	ft_strlcat(char *dest, const char *src, size_t size);
 #endif 

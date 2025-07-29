@@ -68,6 +68,7 @@ char	*ft_get_remainder(char *remainder, char *buffer, size_t end)
 		str = ft_strjoin(remainder, buffer);
 		free(remainder);
 		remainder = ft_strjoin(str, "");
+		free(str);
 	}
 	else
 	{

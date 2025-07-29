@@ -35,7 +35,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	if (nmemb > ((size_t)-1 / size))
 		return ((void *)0);
 	full_size = nmemb * size;
-	ptr = (void *) malloc(full_size);
+	ptr = (void *) malloc(full_size * sizeof(char));
 	if (!ptr)
 		return ((void *)0);
 	i = 0;
@@ -50,15 +50,15 @@ char	*ft_strjoin(const char *s1, const char *s2)
 	int		s1_len;
 	int		s2_len;
 
-	if (!s1 || !s2)
+	if (!s1 && !s2)
 		return ((void *)0);
 	s1_len = ft_strlen(s1);
 	s2_len = ft_strlen(s2);
-	str_join = (char *) malloc(s1_len + s2_len + 1);
+	str_join = calloc((s1_len + s2_len + 1), sizeof(char));
 	if (!str_join)
 		return ((void *)0);
 	ft_strlcpy(str_join, s1, s1_len + s2_len + 1);
-	ft_strlcpy(str_join + s1_len, s2, s1_len + s2_len + 1);
+	ft_strlcat(str_join, s2, s1_len + s2_len + 1);
 	return (str_join);
 }
 
@@ -80,4 +80,26 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 		}
 	}
 	return (src_len);
+}
+
+size_t	ft_strlcat(char *dest, const char *src, size_t size)
+{
+	size_t	src_len;
+	size_t	dest_len;
+	size_t	i;
+
+	src_len = ft_strlen(src);
+	if (size == 0)
+		return (src_len);
+	dest_len = ft_strlen(dest);
+	if (size <= dest_len)
+		return (size + src_len);
+	i = 0;
+	while (i < size - dest_len - 1 && src[i])
+	{
+		dest[dest_len + i] = src[i];
+		i++;
+	}
+	dest[dest_len + i] = '\0';
+	return (dest_len + src_len);
 }
