@@ -21,8 +21,9 @@ int	ft_get_newline_pos(char *buffer)
 	str = buffer;
 	while (str[i])
 	{
-		if (str[i++] == '\n')
-			return (--i);
+		if (str[i] == '\n')
+			return (i);
+		i++; 
 	}
 	return (-1);
 }
@@ -35,15 +36,13 @@ char	*ft_get_line(char *buffer, char *remainder, size_t end)
 
 	buf_len = ft_strlen(buffer);
 	rem_len = ft_strlen(remainder);
-	if (end == 0)
-		return (ft_strjoin(buffer, ""));
 	if (rem_len > 0)
 	{
 		str = ft_calloc(rem_len + end + 1, sizeof(char));
 		if (!str)
 			return ((void *)0);
-		ft_strlcpy(str, remainder, rem_len + end + 1);
-		ft_strlcpy(str + rem_len, buffer, rem_len + end + 1);
+		ft_strlcpy(str, remainder, rem_len + 1);
+		ft_strlcpy(str + rem_len, buffer, end + 1);
 		free(remainder);
 	}
 	else {
@@ -67,8 +66,7 @@ char	*ft_get_remainder(char *remainder, char *buffer, size_t end)
 	{
 		str = ft_strjoin(remainder, buffer);
 		free(remainder);
-		remainder = ft_strjoin(str, "");
-		free(str);
+		remainder = str;
 	}
 	else
 	{
@@ -93,14 +91,16 @@ char	*ft_parse_line(char *buffer, int fd, size_t end)
 	if (buf_len > end)
 	{
 		str = ft_get_line(buffer, remainder[fd], end);
-		if (buf_len - end > 1)
+		if (buf_len - end > 0)
 		{
 			remainder[fd] = ft_calloc(buf_len - end + 1, sizeof(char));
 			ft_strlcpy(remainder[fd], buffer + end + 1, buf_len - end + 1);
 		}
 	}
 	else
+	{
 		remainder[fd] = ft_get_remainder(remainder[fd], buffer, end);
+	}
 	return (str);
 }
 
@@ -114,8 +114,8 @@ char	*get_next_line(int fd)
 		return (0);
 	end = 0;
 	size = read(fd, buffer, BUFFER_SIZE);
-	if ((size_t) -1 == size)
-		return (0);
+	if ((size_t) -1 == size || size == 0)
+		return ((void *) 0);
 	while (size > 0)
 	{
 		buffer[size] = '\0';
