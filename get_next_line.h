@@ -19,9 +19,9 @@
 #  define BUFFER_SIZE 1024
 # endif
 
-#ifndef OPEN_MAX
-# define OPEN_MAX 1024
-#endif
+# ifndef OPEN_MAX
+#  define OPEN_MAX 1024
+# endif
 
 size_t	ft_strlen(const char *str);
 char	*get_next_line(int fd);
