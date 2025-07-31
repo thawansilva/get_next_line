@@ -44,7 +44,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (ptr);
 }
 
-char	*ft_strjoin(const char *s1, const char *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*str_join;
 	int		s1_len;
@@ -59,6 +59,7 @@ char	*ft_strjoin(const char *s1, const char *s2)
 		return (NULL);
 	ft_strlcpy(str_join, s1, s1_len + 1);
 	ft_strlcpy(str_join + s1_len, s2, s2_len + 1);
+	free(s1);
 	return (str_join);
 }
 
