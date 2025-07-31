@@ -12,120 +12,62 @@
 
 #include "./get_next_line.h"
 
-int	ft_get_newline_pos(char *buffer)
+static void	*ft_free(char *s1, char *s2)
+{
+	free(s1);
+	free(s2);
+	return (NULL);
+}
+
+char	*ft_get_line(char *text)
 {
 	size_t	i;
-	char	*str;
-
-	i = 0;
-	str = buffer;
-	while (str[i])
-	{
-		if (str[i] == '\n')
-			return (i);
-		i++; 
-	}
-	return (-1);
+	char	*line
+	return (line);
 }
 
-char	*ft_get_line(char *buffer, char *remainder, size_t end)
+//char	*ft_get_remainder(char *remainder, char *buffer, size_t end)
+//{
+//}
+//
+char	*ft_parse_line(char *line, int fd)
 {
-	char	*str;
-	size_t	buf_len;
-	size_t	rem_len;
+	char	*buff;
+	int		bytes_read;
 
-	buf_len = ft_strlen(buffer);
-	rem_len = ft_strlen(remainder);
-	if (rem_len > 0)
+	buff = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	if (!buff)
+		return (ft_free(buff, line));
+	bytes_read = 1;
+	while (bytes_read > 0)
 	{
-		str = ft_calloc(rem_len + end + 1, sizeof(char));
-		if (!str)
-			return ((void *)0);
-		ft_strlcpy(str, remainder, rem_len + 1);
-		ft_strlcpy(str + rem_len, buffer, end + 1);
-		free(remainder);
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read < 0)
+			return (ft_free(buff, line));
+		buff[bytes_read] = '\0';
+		line = ft_strjoin(line, buff);
+		if (ft_strchr(buff, '\n'))
+			break;
 	}
-	else {
-		str = ft_calloc(buf_len + 1, sizeof(char));
-		if (!str)
-			return ((void *)0);
-		ft_strlcpy(str, buffer, buf_len + 1);
-	}
-	return (str);
-}
-
-char	*ft_get_remainder(char *remainder, char *buffer, size_t end)
-{
-	size_t	rem_len;
-	size_t	buf_len;
-	char	*str;
-
-	rem_len = ft_strlen(remainder);
-	buf_len = ft_strlen(buffer);
-	if (rem_len > 0 && end != 0)
-	{
-		str = ft_strjoin(remainder, buffer);
-		free(remainder);
-		remainder = str;
-	}
-	else
-	{
-		remainder = ft_calloc(buf_len + 1, sizeof(char));
-		ft_strlcpy(remainder, buffer, buf_len + 1);
-	}
-	return (remainder);
-}
-
-char	*ft_parse_line(char *buffer, int fd, size_t end)
-{
-	static char	*remainder[OPEN_MAX];
-	char		*str;
-	size_t		buf_len;
-
-	if (end == 0)
-		return (ft_get_line(buffer, remainder[fd], end));
-	buf_len = ft_strlen(buffer);
-	str = (void *)0;
-	if (buf_len == 0)
-		return (remainder[fd]);
-	if (buf_len > end)
-	{
-		str = ft_get_line(buffer, remainder[fd], end);
-		if (buf_len - end > 0)
-		{
-			remainder[fd] = ft_calloc(buf_len - end + 1, sizeof(char));
-			ft_strlcpy(remainder[fd], buffer + end + 1, buf_len - end + 1);
-		}
-	}
-	else
-	{
-		remainder[fd] = ft_get_remainder(remainder[fd], buffer, end);
-	}
-	return (str);
+	if (bytes_read == 0 && (line[0] == '\0' || !line))
+		return ft_free(line, buff);
+	ft_free(buff, NULL);
+	return (line);
 }
 
 char	*get_next_line(int fd)
 {
-	size_t	size;
-	size_t	end;
-	char	buffer[BUFFER_SIZE + 1];
+	char	*line;
+	static char	*text;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (0);
-	end = 0;
-	size = read(fd, buffer, BUFFER_SIZE);
-	if ((size_t) -1 == size || size == 0)
-		return ((void *) 0);
-	while (size > 0)
-	{
-		buffer[size] = '\0';
-		end = ft_get_newline_pos(buffer);
-		if ((size_t) -1 != end)
-			return (ft_parse_line(buffer, fd, end));
-		ft_parse_line(buffer, fd, size);
-		size = read(fd, buffer, BUFFER_SIZE);
-	}
-	if (size == 0 && (size_t) -1 == end)
-		return (ft_parse_line("", fd, end));
-	return ((void *)0);
+		return (ft_free(line, NULL));
+	text = ft_get_line(line, fd);
+	if (!text)
+		return (NULL);
+	line = ft_get_line(text);
+	if (!line)
+		return (ft_free(line, text));
+	text = ft_get_remainder(text);
+	return (line);
 }
