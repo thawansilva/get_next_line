@@ -54,7 +54,7 @@ char	*ft_strjoin(char *s1, char *s2)
 		return (NULL);
 	s1_len = ft_strlen(s1);
 	s2_len = ft_strlen(s2);
-	str_join = calloc((s1_len + s2_len + 1), sizeof(char));
+	str_join = ft_calloc((s1_len + s2_len + 1), sizeof(char));
 	if (!str_join)
 		return (NULL);
 	ft_strlcpy(str_join, s1, s1_len + 1);
