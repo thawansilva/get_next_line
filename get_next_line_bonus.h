@@ -19,9 +19,7 @@
 #  define BUFFER_SIZE 1024
 # endif
 
-# ifndef OPEN_MAX
-#  define OPEN_MAX 1024
-# endif
+# define OPEN_MAX 1024
 
 char	*get_next_line(int fd);
 void	*ft_calloc(size_t nmemb, size_t size);
