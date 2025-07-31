@@ -19,7 +19,7 @@ static void	*ft_free(char *s1, char *s2)
 	return (NULL);
 }
 
-char	*ft_get_line(char *text)
+static char	*ft_get_line(char *text)
 {
 	size_t	line_len;
 	char	*line;
@@ -39,7 +39,7 @@ char	*ft_get_line(char *text)
 	return (line);
 }
 
-char	*ft_get_remainder(char *text)
+static char	*ft_get_remainder(char *text)
 {
 	size_t	nl_pos;
 	size_t	rem_len;
@@ -61,7 +61,7 @@ char	*ft_get_remainder(char *text)
 	return (remainder);
 }
 
-char	*ft_parse_line(char *line, int fd)
+static char	*ft_parse_line(char *line, int fd)
 {
 	char	*buff;
 	int		bytes_read;
